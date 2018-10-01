@@ -1,35 +1,47 @@
+
+clear, clc, close all
+
+img = im2double(imread('circuitboard-gaussian.tif'));
+m=5;
+n=5;
+
+fImage = aMean(img,m,n);
+figure(1), clc;
+subplot(1, 2, 1), imshow(img,[]), title('Original Image');
+subplot(1, 2, 2), imshow(fImage,[]), title('Filtered Image');
+    
+fImage = gMean(img,m,n);
+figure(2), clc;
+subplot(1, 2, 1), imshow(img,[]), title('Original Image');
+subplot(1, 2, 2), imshow(fImage,[]), title('Filtered Image');
     
 
 %a
-function f_hat= aMean[g,m,n]
+function f_hat= aMean(g,m,n)
     a = ones(m,n);
     filter = a./(m*n);
-    f_hat = imfilter(h, filter);
+    f_hat = imfilter(g, filter);
 end
 
 %b
-function f_hat= gMean[g,m,n]
-    [m,n] = size(input_noise);                  
-    output = zeros(m,n);                        %output image set with placeholder values of all zeros
-    val = 1;                                    %variable to hold new pixel value
+function f_hat= gMean(g,m,n)
+    [aa, bb] = size(g);
+    a  = floor(m/2);
+    b  = floor(n/2);
+    f_hat = zeros(m,n);                        
+    tmp = 1;                                    
 
-    for i = 2:m-2                               %loop through each pixel in original image
-        for j = 2:n-2                           %compute geometric mean of 3x3 window around pixel
-            p = input_noise(i-1,j-1);
-            q = input_noise(i-1,j);
-            r = input_noise(i-1,j+1);
-            s = input_noise(i,j-1);
-            t = input_noise(i,j);
-            u = input_noise(i,j+1);
-            v = input_noise(i+1,j-1);
-            w = input_noise(i+1,j);
-            x = input_noise(i+1,j+1);
-
-            val = (p*q*r*s*t*u*v*w*x)^(1/9);
-            output(i,j) = val;                  %set output pixel to computed geometric mean
-            val = 1;                            %reset val for next pixel
+    for i = a+1:(aa-a)                             
+        for j = b+1:(bb-b)             
+            for ii = (i-a):(i+a)
+                for jj = (j-b):(j+b)
+                    tmp = tmp* g(ii,jj);
+                end
+            end
+            tmp = double(tmp)^(1/9);
+            f_hat(i,j) = tmp;                 
+            tmp = 1;  
         end
     end
-    f_hat = imfilter(h, filter);
 end
 

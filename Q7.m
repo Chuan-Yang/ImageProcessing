@@ -20,16 +20,19 @@ figure(3), clc;
 subplot(1, 2, 1), imshow(img,[]), title('Original Image');
 subplot(1, 2, 2), imshow(fImage,[]), title('Filtered Image');
 
+%a
 function f_hat = minFilter(g, m, n)
     f = @(x) min(x(:));
     f_hat = nlfilter(g,[m n],f);
 end
 
+%b
 function f_hat = medianFilter(g, m, n)
     f = @(x) median(x(:));
     f_hat = nlfilter(g,[m n],f);
 end
 
+%c
 function f_hat = maxFilter(g, m, n)
     f = @(x) max(x(:));
     f_hat = nlfilter(g,[m n],f);
