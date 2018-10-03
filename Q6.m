@@ -96,7 +96,7 @@ function f_hat= gMean(g,m,n)
         for j = b+1:(bb-b)             
             for ii = (i-a):(i+a)
                 for jj = (j-b):(j+b)
-                    tmp = tmp* g(ii,jj);
+                    tmp = double(tmp* g(ii,jj));
                 end
             end
             tmp = double(tmp).^(1/(m*n));
@@ -118,10 +118,10 @@ function f_hat= hMean(g,m,n)
         for j = b+1:(bb-b)             
             for ii = (i-a):(i+a)
                 for jj = (j-b):(j+b)
-                    tmp = double(tmp + 1/g(ii,jj));
+                    tmp = double(tmp + double(1/g(ii,jj)));
                 end
             end
-            tmp = (m*n)/tmp;
+            tmp = double((m*n)/tmp);
             f_hat(i,j) = tmp;                 
             tmp = 0;  
         end
@@ -136,17 +136,19 @@ function f_hat= chMean(g,m,n)
     Q = 1.5;
     f_hat = zeros(m,n);                        
     tmp = 0;                                    
-
+    temp = 0;
     for i = a+1:(aa-a)                             
         for j = b+1:(bb-b)             
             for ii = (i-a):(i+a)
                 for jj = (j-b):(j+b)
-                    tmp = tmp + g(ii,jj);
+                    tmp = tmp + g(ii,jj).^(Q+1);
+                    temp = temp + g(ii,jj).^Q;
                 end
             end
-            tmp = (tmp.^(Q+1))/(tmp.^Q);
+            tmp = double(tmp./temp);
             f_hat(i,j) = tmp;                 
             tmp = 0;  
+            temp = 0;
         end
     end
 end
